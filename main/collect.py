@@ -51,23 +51,41 @@ def read_execl(file_name):
     return persons, months
 
 
-def write_execl(file_name):
-    data = xlwt.Workbook()
-    person_list, months = read_execl(file_name)
-
+def split(persons, months):
+    result = []
     for month in months:
-        sheet = data.add_sheet(str(month) + '月')
+        person_list = []
+        for person in persons:
+            if person[0] == month :
+                person_list.append(person)
+        result.append(person_list)
+
+    return result
+
+
+def write_execl(read_name, write_name):
+    # source_execl = xlrd.open_workbook(read_name)
+    # data = copy(source_execl)
+    data = xlwt.Workbook()
+    person_list, months = read_execl(read_name)
+
+    result = split(person_list, months)
+
+    for ii in range(0, len(result)):
+        sheet = data.add_sheet(str(result[ii][0][0]) + '月', cell_overwrite_ok=True)
 
         for i in range(0, len(title)):
             sheet.write(0, i, title[i])
 
-        for i in range(1, len(person_list)):
+        person_list = result[ii]
+        for i in range(0, len(person_list)):
             for j in range(1, len(person_list[i])):
-                if person_list[i][0] == months:
-                    sheet.write(i, j, person_list[i][j])
+                sheet.write(i + 1, j - 1, person_list[i][j])
 
-    data.save(file_name)
+    data.save(write_name)
 
 
 if __name__ == '__main__':
-    write_execl("/home/yangxvhao/work/document/Book2.xlsx")
+    read_name = "/home/yangxvhao/work/document/execl-collect/Book1.xlsx"
+    write_name = "/home/yangxvhao/work/document/execl-collect/Book2.xlsx"
+    write_execl(read_name, write_name)
