@@ -6,6 +6,7 @@ __time__ = '18-4-9'
 
 import xlrd
 import xlwt
+import os
 
 title = ['姓名', '出勤时数', '全勤奖']
 
@@ -85,7 +86,15 @@ def write_execl(read_name, write_name):
     data.save(write_name)
 
 
+def read_file_of_dir(dir):
+    files = os.listdir(dir)
+    for file in files:
+        read_file = os.path.join(dir, file)
+        write_file_name = file.split(".")[0] + "汇总.xlsx"
+        write_file = os.path.join(dir, write_file_name)
+        write_execl(read_file, write_file)
+
+
 if __name__ == '__main__':
-    read_name = "/home/yangxvhao/work/document/execl-collect/Book1.xlsx"
-    write_name = "/home/yangxvhao/work/document/execl-collect/Book2.xlsx"
-    write_execl(read_name, write_name)
+    read_dir = "/home/yangxvhao/work/document/execl-collect"
+    read_file_of_dir(read_dir)
