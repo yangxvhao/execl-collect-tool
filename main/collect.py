@@ -9,10 +9,14 @@ import xlwt
 import os
 
 result_title = []
-for i in range(0, 50):
-    result_title.append(0)
 
 result_cell = ['工资月份', '工号', '姓名', '出勤小时', '应付工资', '应发工资']
+
+
+def init_array(array):
+    if isinstance(array, (list)):
+        for i in range(0, 50):
+            array.append(0)
 
 
 def read_execl(file_name):
@@ -21,9 +25,9 @@ def read_execl(file_name):
 
     months = set()
     persons = []
-    rows_info = []
 
     for sheet in sheets:
+        init_array(result_title)
         rows = sheet.nrows
         for i in range(rows):
             cells = sheet.row_values(i)
@@ -31,29 +35,33 @@ def read_execl(file_name):
             if i <= 3:
                 for j in range(len(cells)):
                     if cells[j].replace(" ", "") in result_cell:
-                        result_title.insert(j, cells[j].replace(" ", ""))
+                        result_title[j] = cells[j].replace(" ", "")
             if i <= 3:
                 continue
             person_info = []
+            count = 0
+            for result in result_title:
+                if result != 0:
+                    count = count + 1
+            if result == len(result_cell):
+                month = sheet.cell(i, result_title.index(result_cell[0])).value
+                job_number = sheet.cell(i, result_title.index(result_cell[1])).value
+                name = sheet.cell(i, result_title.index(result_cell[2])).value
+                work_time = sheet.cell(i, result_title.index(result_cell[3])).value
+                wage_payable = sheet.cell(i, result_title.index(result_cell[4])).value
+                real_payable = sheet.cell(i, result_title.index(result_cell[5])).value
 
-            month = sheet.cell(i, result_title.index(result_cell[0])).value
-            job_number = sheet.cell(i, result_title.index(result_cell[1])).value
-            name = sheet.cell(i, result_title.index(result_cell[2])).value
-            work_time = sheet.cell(i, result_title.index(result_cell[3])).value
-            wage_payable = sheet.cell(i, result_title.index(result_cell[4])).value
-            real_payable = sheet.cell(i, result_title.index(result_cell[5])).value
+                if name == '小计' or name == '合计':
+                    continue
+                months.add(month)
+                person_info.append(month)
+                person_info.append(job_number)
+                person_info.append(name)
+                person_info.append(work_time)
+                person_info.append(wage_payable)
+                person_info.append(real_payable)
 
-            if name == '小计' or name == '合计':
-                continue
-            months.add(month)
-            person_info.append(month)
-            person_info.append(job_number)
-            person_info.append(name)
-            person_info.append(work_time)
-            person_info.append(wage_payable)
-            person_info.append(real_payable)
-
-            persons.append(person_info)
+                persons.append(person_info)
     print(months)
     return persons, months
 
