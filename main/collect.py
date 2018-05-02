@@ -21,7 +21,6 @@ def read_execl(file_name):
 
     months = set()
     persons = []
-    rows_info = []
 
     for sheet in sheets:
         rows = sheet.nrows
@@ -31,18 +30,20 @@ def read_execl(file_name):
             if i <= 3:
                 for j in range(len(cells)):
                     if cells[j].replace(" ", "") in result_cell:
-                        result_title.insert(j, cells[j].replace(" ", ""))
+                        result_title[j] = cells[j].replace(" ", "")
             if i <= 3:
                 continue
             person_info = []
-
-            month = sheet.cell(i, result_title.index(result_cell[0])).value
-            job_number = sheet.cell(i, result_title.index(result_cell[1])).value
-            name = sheet.cell(i, result_title.index(result_cell[2])).value
-            work_time = sheet.cell(i, result_title.index(result_cell[3])).value
-            wage_payable = sheet.cell(i, result_title.index(result_cell[4])).value
-            real_payable = sheet.cell(i, result_title.index(result_cell[5])).value
-
+            try:
+                month = sheet.cell(i, result_title.index(result_cell[0])).value
+                job_number = sheet.cell(i, result_title.index(result_cell[1])).value
+                name = sheet.cell(i, result_title.index(result_cell[2])).value
+                work_time = sheet.cell(i, result_title.index(result_cell[3])).value
+                wage_payable = sheet.cell(i, result_title.index(result_cell[4])).value
+                real_payable = sheet.cell(i, result_title.index(result_cell[5])).value
+            except Exception as e:
+                print(e)
+                return persons, months
             if name == '小计' or name == '合计':
                 continue
             months.add(month)
@@ -81,8 +82,8 @@ def write_execl(read_name, write_name):
     for ii in range(0, len(result)):
         sheet = data.add_sheet(str(result[ii][0][0]) + '月', cell_overwrite_ok=True)
 
-        for i in range(0, len(result_title)):
-            sheet.write(0, i, result_title[i])
+        for i in range(1, len(result_cell)):
+            sheet.write(0, i - 1, result_cell[i])
 
         person_list = result[ii]
         for i in range(0, len(person_list)):
@@ -95,9 +96,9 @@ def write_execl(read_name, write_name):
 def read_file_of_dir(dir):
     files = os.listdir(dir)
     for file in files:
-        if os.path.isfile(os.path.join(dir,file)):
+        if file.endswith('xls') or file.endswith('xlsx'):
             read_file = os.path.join(dir, file)
-            write_file_name = file.split(".")[0] + "汇总.xls"
+            write_file_name = file.split(".xls")[0] + "汇总.xls"
             result_path = os.path.join(dir, 'result')
             if not os.path.exists(result_path):
                 os.mkdir(result_path)
