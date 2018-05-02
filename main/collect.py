@@ -9,6 +9,8 @@ import xlwt
 import os
 
 result_title = []
+for i in range(0, 50):
+    result_title.append(0)
 
 result_cell = ['工资月份', '工号', '姓名', '出勤小时', '应付工资', '应发工资']
 
@@ -40,7 +42,7 @@ def read_execl(file_name):
                 wage_payable = sheet.cell(i, result_title.index(result_cell[4])).value
                 real_payable = sheet.cell(i, result_title.index(result_cell[5])).value
             except Exception as e:
-                print(e)
+                print('工作表' + str(sheet.name) + ',列异常:' + str(e))
                 return persons, months
             if name == '小计' or name == '合计':
                 continue
@@ -62,7 +64,7 @@ def split(persons, months):
     for month in months:
         person_list = []
         for person in persons:
-            if person[0] == month :
+            if person[0] == month:
                 person_list.append(person)
         result.append(person_list)
 
