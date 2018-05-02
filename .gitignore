@@ -3,7 +3,7 @@ classes/
 .settings/
 .classpath
 .project
-.idea/
+.idea
 .idea/modules.xml
 bin/
 *.iml

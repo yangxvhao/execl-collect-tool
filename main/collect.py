@@ -9,8 +9,6 @@ import xlwt
 import os
 
 result_title = []
-for i in range(0, 50):
-    result_title.append(0)
 
 result_cell = ['工资月份', '工号', '姓名', '出勤小时', '应付工资', '应发工资']
 
