@@ -9,8 +9,12 @@ import xlwt
 import os
 
 result_title = []
-for i in range(0, 50):
-    result_title.append(0)
+
+
+def init(param):
+    for i in range(0, 50):
+        param.append(0)
+
 
 result_cell = ['工资月份', '工号', '姓名', '出勤小时', '应付工资', '应发工资']
 
@@ -24,8 +28,10 @@ def read_execl(file_name):
 
     for sheet in sheets:
         rows = sheet.nrows
+        init(result_title)
         for i in range(rows):
             cells = sheet.row_values(i)
+            print(cells)
             # 表头结束的行数
             if i <= 3:
                 for j in range(len(cells)):
@@ -34,13 +40,16 @@ def read_execl(file_name):
             if i <= 3:
                 continue
             person_info = []
+            print(result_title)
             try:
                 for result in range(0, len(result_title)):
-                    sheet_data = sheet.cell(i, result).value
-                    if sheet_data != "小计" or sheet_data != "合计":
-                        person_info.append(sheet.cell(i, result).value)
-                    if result_title[result] == "工资月份":
-                        months.add(sheet_data)
+                    if result_title[result] != 0:
+                        sheet_data = sheet.cell(i, result).value
+                        if sheet_data == "小计" or sheet_data == "合计":
+                            break
+                        person_info.append(sheet_data)
+                        if result_title[result] == "工资月份" and sheet_data != '':
+                            months.add(sheet_data)
                 # month = sheet.cell(i, result_title.index(result_cell[0])).value
                 # job_number = sheet.cell(i, result_title.index(result_cell[1])).value
                 # name = sheet.cell(i, result_title.index(result_cell[2])).value
@@ -59,8 +68,8 @@ def read_execl(file_name):
             # person_info.append(work_time)
             # person_info.append(wage_payable)
             # person_info.append(real_payable)
-
-            persons.append(person_info)
+            if len(person_info) != 0:
+                persons.append(person_info)
     print(months)
     return persons, months
 
@@ -87,6 +96,10 @@ def write_execl(read_name, write_name):
 
     for ii in range(0, len(result)):
         sheet = data.add_sheet(str(result[ii][0][0]) + '月', cell_overwrite_ok=True)
+
+        for temp in result_cell:
+            if temp not in result_title:
+                result_cell.remove(temp)
 
         for i in range(1, len(result_cell)):
             sheet.write(0, i - 1, result_cell[i])
