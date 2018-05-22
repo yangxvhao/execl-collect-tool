@@ -9,11 +9,13 @@ import xlwt
 import os
 
 result_title = []
+for u in range(0, 50):
+    result_title.append(0)
 
 
 def init(param):
     for i in range(0, 50):
-        param.append(0)
+        param[i] = 0
 
 
 result_cell = ['工资月份', '工号', '姓名', '出勤小时', '应付工资', '应发工资']
@@ -29,9 +31,10 @@ def read_execl(file_name):
     for sheet in sheets:
         rows = sheet.nrows
         init(result_title)
+        # print(result_title)
         for i in range(rows):
             cells = sheet.row_values(i)
-            print(cells)
+            # print(cells)
             # 表头结束的行数
             if i <= 3:
                 for j in range(len(cells)):
@@ -40,7 +43,7 @@ def read_execl(file_name):
             if i <= 3:
                 continue
             person_info = []
-            print(result_title)
+            # print(result_title)
             try:
                 for result in range(0, len(result_title)):
                     if result_title[result] != 0:
