@@ -18,7 +18,7 @@ def init(param):
         param[i] = 0
 
 
-result_cell = ['工资月份', '工号', '姓名', '出勤小时', '应付工资', '应发工资']
+result_cell = ['工资月份', '工号', '姓名', '工时', '应付工资', '应发工资']
 
 
 def read_execl(file_name):
@@ -53,24 +53,9 @@ def read_execl(file_name):
                         person_info.append(sheet_data)
                         if result_title[result] == "工资月份" and sheet_data != '':
                             months.add(sheet_data)
-                # month = sheet.cell(i, result_title.index(result_cell[0])).value
-                # job_number = sheet.cell(i, result_title.index(result_cell[1])).value
-                # name = sheet.cell(i, result_title.index(result_cell[2])).value
-                # work_time = sheet.cell(i, result_title.index(result_cell[3])).value
-                # wage_payable = sheet.cell(i, result_title.index(result_cell[4])).value
-                # real_payable = sheet.cell(i, result_title.index(result_cell[5])).value
             except Exception as e:
                 print('工作表' + str(sheet.name) + ',列异常:' + str(e))
                 return persons, months
-            # if name == '小计' or name == '合计':
-            #     continue
-            # months.add(month)
-            # person_info.append(month)
-            # person_info.append(job_number)
-            # person_info.append(name)
-            # person_info.append(work_time)
-            # person_info.append(wage_payable)
-            # person_info.append(real_payable)
             if len(person_info) != 0:
                 persons.append(person_info)
     print(months)
